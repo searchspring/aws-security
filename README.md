@@ -118,6 +118,7 @@ Attribute Parameters:
 
 The following will create a rule in security group `Example` in region `us-west-2` to allow 192.168.1.1 access to port 80
 
+```ruby
 aws_security_group_rule 'example1' do
   description "Example Rule 1"
   aws_access_key_id node['aws_security']['aws_access_key_id']
@@ -128,9 +129,11 @@ aws_security_group_rule 'example1' do
   port_range "80..80"
   ip_protocol 'tcp'
 end
+```
 
 The following will create a rule in security group `Example` in region `us-west-2` to allow a security group with the id of `sg-3b5a6ffe` to allow access to port 80 
 
+```ruby
 aws_security_group_rule 'exmaple2' do
   description "Example Rule 2"
   aws_access_key_id node['aws_security']['aws_access_key_id']
@@ -141,9 +144,11 @@ aws_security_group_rule 'exmaple2' do
   port_range "80..80"
   ip_protocol 'tcp'
 end
+```
 
 The following will create a rule in security group `Example` in region `us-east-1` to allow 10.0.0.0/24 all access
 
+```ruby
 aws_security_group_rule 'example3' do
   description "Example Rule 3"
   aws_access_key_id node['aws_security']['aws_access_key_id']
@@ -152,7 +157,7 @@ aws_security_group_rule 'example3' do
   groupname "Example"
   ip_protocol '-1'
 end
-
+```
 
 TODO
 ====
