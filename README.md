@@ -28,11 +28,13 @@ The default recipe will look for a encrypted data bag defined by node['aws_secur
 * aws_secret_access_key
 
 E.G.
+```json
 {
     "id": "aws",
     "aws_access_key_id": "YOUR_ACCESS_KEY",
     "aws_secret_access_key": "YOUR_SECRET_ACCESS_KEY"
 }
+```
 
 Recipes
 =======
