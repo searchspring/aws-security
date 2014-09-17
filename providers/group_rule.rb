@@ -55,29 +55,29 @@ end
 
 def load_current_resource
   @current_resource = Chef::Resource::AwsSecurityGroupRule.new(@new_resource.name)
-  @current_resource.groupname(new_resource.groupname)
+  @current_resource.groupname(@new_resource.groupname)
   if new_resource.groupid
-    @current_resource.groupid(new_resource.groupid)
+    @current_resource.groupid(@new_resource.groupid)
   elsif sg = security_groupname_exists?(@current_resource) 
     @current_resource.groupid(sg.group_id)
   else
     raise "Could not find security groupid for #{ new_resource }"
   end
-  @current_resource.name(new_resource.name)
-  @current_resource.cidr_ip(new_resource.cidr_ip)
-  @current_resource.group(new_resource.group)
-  @current_resource.ip_protocol(new_resource.ip_protocol)
-  @current_resource.port_range(new_resource.port_range)
+  @current_resource.name(@new_resource.name)
+  @current_resource.cidr_ip(@new_resource.cidr_ip)
+  @current_resource.group(@new_resource.group)
+  @current_resource.ip_protocol(@new_resource.ip_protocol)
+  @current_resource.port_range(@new_resource.port_range)
   if @current_resource.port_range
     (from_port,to_port) = @current_resource.port_range.split(/\.\./)
     @current_resource.from_port(from_port.to_i)
     @current_resource.to_port(to_port.to_i)
   end
-  @current_resource.group(new_resource.group)
-  @current_resource.owner(new_resource.owner)
-  @current_resource.aws_access_key_id(new_resource.aws_access_key_id)
-  @current_resource.aws_secret_access_key(new_resource.aws_secret_access_key)
-  @current_resource.region(new_resource.region)
+  @current_resource.group(@new_resource.group)
+  @current_resource.owner(@new_resource.owner)
+  @current_resource.aws_access_key_id(@new_resource.aws_access_key_id || node['aws_security']['aws_access_key_id'])
+  @current_resource.aws_secret_access_key(@new_resource.aws_access_key_id || node['aws_security']['aws_access_key_id'])
+  @current_resource.region(@new_resource.region)
 
   if security_group_rule_exists?(@current_resource)
     @current_resource.exists = true
