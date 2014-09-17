@@ -2,7 +2,7 @@
 # Author:: Greg Hellings (<greg@thesub.net>)
 # 
 # 
-# Copyright 2014, SearchSpring, Inc.
+# Copyright 2014, B7 Interactive, LLC
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
