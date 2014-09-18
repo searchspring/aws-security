@@ -1,4 +1,5 @@
 require 'serverspec'
+require 'json'
 
 include SpecInfra::Helper::Exec  
 include SpecInfra::Helper::DetectOS

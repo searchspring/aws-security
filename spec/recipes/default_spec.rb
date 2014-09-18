@@ -4,10 +4,7 @@ describe 'aws_security::default' do
     before do
     end
     subject { 
-      runner = ChefSpec::Runner.new(
-        :platform => 'amazon',
-        :version  => '2012.09'
-      )
+      runner = ChefSpec::Runner.new
       runner.node.set['memory']['total'] = '1696516kb'
       runner.node.set['lsb']['codename'] = 'rhel'
       runner.node.set['name'] = "rspec"

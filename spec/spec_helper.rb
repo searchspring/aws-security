@@ -21,10 +21,10 @@ RSpec.configure do |config|
   # config.path = 'ohai.json'
 
   # Specify the operating platform to mock Ohai data from
-  # config.platform = 'centos'
+  config.platform = 'amazon'
 
   # Specify the operating version to mock Ohai data from
-  # config.version = '6.4'
+  config.version = '2012.09'
 
   # :focus support to allow zooming in a single test/block
   # config.filter_run :focus => true

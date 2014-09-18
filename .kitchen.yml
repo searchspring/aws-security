@@ -9,9 +9,23 @@ platforms:
   - name: centos-6.5
 
 suites:
-  - name: default
-    data_bags_path: "test/integration/default/data_bags"
-    encrypted_data_bag_secret_key_path: "test/integration/default/encrypted_data_bag_secret"
+  - name: add_test
+    data_bags_path: "test/integration/add_test/data_bags"
+    encrypted_data_bag_secret_key_path: "test/integration/add_test/encrypted_data_bag_secret"
     run_list:
-      - recipe[fake::test]
-    attributes:
+      - recipe[fake::test1]
+    attributes: {
+      aws_security: {
+      	encrypted_data_bag: "aws_security"
+      }
+    }
+  - name: remove_test
+    data_bags_path: "test/integration/remove_test/data_bags"
+    encrypted_data_bag_secret_key_path: "test/integration/remove_test/encrypted_data_bag_secret"
+    run_list:
+      - recipe[fake::test2]
+    attributes: {
+      aws_security: {
+        encrypted_data_bag: "aws_security"
+      }
+    }

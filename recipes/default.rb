@@ -24,11 +24,11 @@ include_recipe "build-essential"
 chef_gem "fog"
 
 if node['aws_security']['encrypted_data_bag']
-  databag_item = Chef::EncyptedDataBagItem.load(
-  	aws_keys,
-    node['aws_security']['encrypted_data_bag']
+  databag_item = Chef::EncryptedDataBagItem.load(
+    node['aws_security']['encrypted_data_bag'],
+  	'aws_keys'
   )
-  default['aws_security']['aws_access_key_id'] = databag_item['aws_access_key_id']
-  default['aws_security']['aws_secret_access_key'] = databag_item['aws_secret_access_key']
+  node.set['aws_security']['aws_access_key_id'] = databag_item['aws_access_key_id']
+  node.set['aws_security']['aws_secret_access_key'] = databag_item['aws_secret_access_key']
 end
 

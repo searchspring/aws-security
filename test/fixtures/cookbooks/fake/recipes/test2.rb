@@ -1,11 +1,11 @@
 #
 # Cookbook Name:: fake
-# Recipe:: test
+# Recipe:: test2
 #
 # Author:: Greg Hellings (<greg@thesub.net>)
 # 
 # 
-# Copyright 2014, SearchSpring, Inc.
+# Copyright 2014, B7 Interactive, LLC
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,71 +19,85 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
 include_recipe "aws_security::default"
+include_recipe "python"
 
 
-aws_security_group 'test' do
-  description "test security group"
-  # aws_access_key_id node['aws_security']['aws_access_key_id'] 
-  # aws_secret_access_key node['aws_security']['aws_secret_access_key']
-  region 'us-west-2'
+python_pip "awscli"
+
+directory "/root/.aws" do
+  owner "root"
+  group "root"
+  mode "0755"
+  action :create
+end
+
+template "/root/.aws/config" do
+  source 'aws_config.erb'
+  owner 'root'
+  group 'root'
+  variables({
+    :aws_access_key_id => node['aws_security']['aws_access_key_id'],
+    :aws_secret_access_key => node['aws_security']['aws_secret_access_key']
+  })
 end
 
 aws_security_group_rule 'test rule 1' do
   description "test rule 1"
-  aws_access_key_id node['aws_security']['aws_access_key_id']
-  aws_secret_access_key node['aws_security']['aws_secret_access_key']
   cidr_ip "192.168.1.1/32"
   groupname "test"
   region 'us-west-2'
   port_range "80..80"
   ip_protocol 'tcp'
+  action :remove
 end
 
 aws_security_group_rule 'test rule 2' do
-  aws_access_key_id node['aws_security']['aws_access_key_id']
-  aws_secret_access_key node['aws_security']['aws_secret_access_key']
   cidr_ip "192.168.1.2/32"
   groupname "test"
   region 'us-west-2'
   port_range "80..80"
   ip_protocol 'udp'
+  action :remove
 end
 
 aws_security_group_rule 'test rule 3' do
-  aws_access_key_id node['aws_security']['aws_access_key_id']
-  aws_secret_access_key node['aws_security']['aws_secret_access_key']
   cidr_ip "192.168.1.3/32"
   groupname "test"
   region 'us-west-2'
   port_range "80..80"
   ip_protocol 'tcp'
+  action :remove
 end
 
 aws_security_group_rule 'test rule 4' do
-  aws_access_key_id node['aws_security']['aws_access_key_id']
-  aws_secret_access_key node['aws_security']['aws_secret_access_key']
   cidr_ip "192.168.1.3/32"
   groupname "test"
   region 'us-west-2'
   ip_protocol '-1'
+  action :remove
 end
 
 aws_security_group_rule 'test rule 5' do
-  aws_access_key_id node['aws_security']['aws_access_key_id']
-  aws_secret_access_key node['aws_security']['aws_secret_access_key']
   group "sg-9b1a8ffe"
   groupname "test"
   region 'us-west-2'
   port_range "80..80"
   ip_protocol 'tcp'
+  action :remove
 end
 
 aws_security_group_rule 'test rule 6' do
-  aws_access_key_id node['aws_security']['aws_access_key_id']
-  aws_secret_access_key node['aws_security']['aws_secret_access_key']
   group "sg-9b1a8ffe"
   groupname "test"
   region 'us-west-2'
   ip_protocol 'tcp'
+  action :remove
+end
+
+aws_security_group 'test' do
+  description "test security group"
+  region 'us-west-2'
+  action :remove
 end
