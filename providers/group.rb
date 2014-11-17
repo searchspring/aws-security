@@ -34,8 +34,13 @@ def load_current_resource
   @current_resource.groupname(@new_resource.groupname)
   @current_resource.description(@new_resource.description)
   @current_resource.vpcid(@new_resource.vpcid)
-  @current_resource.aws_access_key_id(@new_resource.aws_access_key_id || node['aws_security']['aws_access_key_id'])
-  @current_resource.aws_secret_access_key(@new_resource.aws_secret_access_key || node['aws_security']['aws_secret_access_key'])
+  if @new_resource.aws_access_key_id ||
+     node['aws_security']['aws_access_key_id']
+    @current_resource.aws_access_key_id(@new_resource.aws_access_key_id ||
+                                        node['aws_security']['aws_access_key_id'])
+    @current_resource.aws_secret_access_key(@new_resource.aws_secret_access_key ||
+                                            node['aws_security']['aws_secret_access_key'])
+  end
   @current_resource.region(@new_resource.region)
 
   @current_resource.exists = true if security_group_exists?(@current_resource)

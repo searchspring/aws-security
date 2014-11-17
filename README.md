@@ -73,8 +73,8 @@ Actions:
 
 Attribute Parameters:
 * `groupname` - Name attribute
-* `aws_access_key_id` - required
-* `aws_secret_access_key` - required
+* `aws_access_key_id` - optional (falls back to IAM roles if not provided)
+* `aws_secret_access_key` - required if aws_access_key_id is specified
 * `description` - required
 * `vpcid` - optional
 * `region` - optional (defaults to 'us-east-1')
