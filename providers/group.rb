@@ -16,13 +16,11 @@ end
 
 action :remove do
   if @current_resource.exists
-  	if security_group
-      converge_by("Remvoing #{ @new_resource } security group") do
-  	    security_group.destroy
-      end
-  	else
-  	  raise "#{ @new_resource } cannot be removed - configuration mismatch"
-  	end
+    raise "#{ @new_resource } cannot be removed - configuration " \
+      'mismatch' unless security_group
+    converge_by("Remvoing #{ @new_resource } security group") do
+	    security_group.destroy
+    end
   else
   	Chef::Log.info "#{ @new_resource } does not exist - nothing to do."
   end
