@@ -13,8 +13,8 @@ action :add do
 	  converge_by("Adding rule #{ @new_resource } to security group") do
       from_port = @current_resource.from_port
       to_port = @current_resource.to_port
-      options = construct_security_group_options
-      security_group.authorize_port_range(from_port..to_port, options)
+      security_group.authorize_port_range(from_port..to_port,
+                                          construct_security_group_options)
     end
   end
 end
@@ -24,8 +24,8 @@ action :remove do
     converge_by("Removing rule #{ @new_resource } from security group") do
       from_port = @current_resource.from_port
       to_port = @current_resource.to_port
-      options = construct_security_group_options
-      security_group.revoke_port_range(from_port..to_port, options)
+      security_group.revoke_port_range(from_port..to_port,
+                                       construct_security_group_options)
     end
   else
     Chef::Log.info("#{ @new_resource } does not exists -- nothing to do")
@@ -71,11 +71,10 @@ end
 
 def security_group_rule
   return false unless @current_resource.groupid
-  sg = security_group_exists?
   # rule we're trying to create
   new_ip_permission = current_resource_ip_permissions
   # loop through existing rules looking for our new rule
-  sg.ip_permissions.each do |ip_permission|
+  security_group.ip_permissions.each do |ip_permission|
   	# rules are either group based or ip based
   	group_or_ip = @current_resource.group ? "groups" : "ipRanges"
   	# if the protocol is '-1' then there aren't from and to ports
