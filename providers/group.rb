@@ -57,5 +57,5 @@ def attributes
     :region       => @current_resource.region
   }
   attributes[:vpc_id] = @current_resource.vpcid if @current_resource.vpcid
-  return attributes
+  attributes
 end
