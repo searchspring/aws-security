@@ -91,10 +91,6 @@ def security_group_rule_exists?(current_resource)
 end
 
 def current_resource_ip_permissions(current_resource)
-  @current_resource_ip_permissions ||= construct_resource_ip_permissions(current_resource)
-end
-
-def construct_resource_ip_permissions(current_resource)
   groups = current_resource.group ? [{ "userId" => current_resource.owner, "groupId" => current_resource.group }] : []
   ipRange = current_resource.cidr_ip ? [{ "cidrIp" => current_resource.cidr_ip } ] : []
   rule = {
