@@ -16,7 +16,7 @@ end
 
 action :remove do
   if @current_resource.exists
-    raise "#{ @new_resource } cannot be removed - configuration " \
+    fail "#{ @new_resource } cannot be removed - configuration " \
       'mismatch' unless security_group
     converge_by("Remvoing #{ @new_resource } security group") do
 	    security_group.destroy

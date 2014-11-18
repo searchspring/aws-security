@@ -16,7 +16,7 @@ action :add do
         sg.authorize_port_range(from_port..to_port, options)
       end
   	else
-  	  raise "#{ new_reouce } can not be created -- security group does not exist"
+  	  fail "#{ new_reouce } can not be created -- security group does not exist"
   	end
   end
 end
@@ -65,7 +65,7 @@ def load_current_resource
   elsif sg = security_groupname_exists?(@current_resource) 
     @current_resource.groupid(sg.group_id)
   # else
-    # raise "Could not find security groupid for #{ new_resource }"
+    # fail "Could not find security groupid for #{ new_resource }"
   end
  if security_group_rule_exists?(@current_resource)
     @current_resource.exists = true
