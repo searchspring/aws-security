@@ -45,7 +45,6 @@ def load_current_resource
   @current_resource.group(@new_resource.group)
   @current_resource.ip_protocol(@new_resource.ip_protocol)
   @current_resource.port_range(@new_resource.port_range)
-  @current_resource.group(@new_resource.group)
   @current_resource.owner(@new_resource.owner)
   @current_resource.region(@new_resource.region)
 
