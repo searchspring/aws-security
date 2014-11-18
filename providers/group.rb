@@ -46,16 +46,16 @@ def security_group
     @sg ||= ec2.security_groups.all('group-name' => [ @current_resource.groupname ] ).first
 end
 
-def create_security_group(current_resource)
-  ec2.security_groups.new(attributes(current_resource)).save
+def create_security_group
+  ec2.security_groups.new(attributes(@current_resource)).save
 end
 
-def attributes(current_resource)
+def attributes
   attributes = {
-    :name         => current_resource.groupname,
-    :description  => current_resource.description,
-    :region       => current_resource.region
+    :name         => @current_resource.groupname,
+    :description  => @current_resource.description,
+    :region       => @current_resource.region
   }
-  attributes[:vpc_id] = current_resource.vpcid if current_resource.vpcid
+  attributes[:vpc_id] = @current_resource.vpcid if @current_resource.vpcid
   return attributes
 end

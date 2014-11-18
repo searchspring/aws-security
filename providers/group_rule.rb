@@ -8,11 +8,11 @@ action :add do
   if @current_resource.exists
   	Chef::Log.info("#{ @new_resource } already exists -- nothing to do")
   else
-  	if sg = security_group_exists?(@current_resource)
+  	if sg = security_group_exists?
   	  converge_by("Adding rule #{ @new_resource } to security group") do
         from_port = @current_resource.from_port
         to_port = @current_resource.to_port
-        options = construct_security_group_options(@current_resource)
+        options = construct_security_group_options
         sg.authorize_port_range(from_port..to_port, options)
       end
   	else
@@ -23,11 +23,11 @@ end
 
 action :remove do
   if @current_resource.exists
-  	sg = security_group_exists?(@current_resource)
+  	sg = security_group_exists?
     converge_by("Removing rule #{ @new_resource } from security group") do
       from_port = @current_resource.from_port
       to_port = @current_resource.to_port
-      options = construct_security_group_options(@current_resource)
+      options = construct_security_group_options
       sg.revoke_port_range(from_port..to_port, options)
     end
   else
@@ -62,27 +62,27 @@ def load_current_resource
   end
   if new_resource.groupid
     @current_resource.groupid(@new_resource.groupid)
-  elsif sg = security_groupname_exists?(@current_resource) 
+  elsif sg = security_groupname_exists? 
     @current_resource.groupid(sg.group_id)
   # else
     # fail "Could not find security groupid for #{ new_resource }"
   end
- if security_group_rule_exists?(@current_resource)
+ if security_group_rule_exists?
     @current_resource.exists = true
   end 
 end
 
-def security_group_rule_exists?(current_resource)
+def security_group_rule_exists?
   return false unless @current_resource.groupid
-  sg = security_group_exists?(current_resource)
+  sg = security_group_exists?
   # rule we're trying to create
-  new_ip_permission = current_resource_ip_permissions(@current_resource)
+  new_ip_permission = current_resource_ip_permissions
   # loop through existing rules looking for our new rule
   sg.ip_permissions.each do |ip_permission|
   	# rules are either group based or ip based
-  	group_or_ip = current_resource.group ? "groups" : "ipRanges"
+  	group_or_ip = @current_resource.group ? "groups" : "ipRanges"
   	# if the protocol is '-1' then there aren't from and to ports
-  	return true if current_resource.ip_protocol == '-1'
+  	return true if @current_resource.ip_protocol == '-1'
   	# loop through options and make sure they match
     properties = %w{group ipProtocol fromPort toPort}
   	current_options = Hash.new
@@ -94,22 +94,22 @@ def security_group_rule_exists?(current_resource)
   false
 end
 
-def current_resource_ip_permissions(current_resource)
-  groups = current_resource.group ? [{ "userId" => current_resource.owner, "groupId" => current_resource.group }] : []
-  ipRange = current_resource.cidr_ip ? [{ "cidrIp" => current_resource.cidr_ip } ] : []
+def current_resource_ip_permissions
+  groups = @current_resource.group ? [{ "userId" => @current_resource.owner, "groupId" => current_resource.group }] : []
+  ipRange = @current_resource.cidr_ip ? [{ "cidrIp" => @current_resource.cidr_ip } ] : []
   rule = {
   	"groups" 	   => groups,
   	"ipRanges" 	 => ipRange,
-  	"ipProtocol" => current_resource.ip_protocol,
+  	"ipProtocol" => @current_resource.ip_protocol,
   }
   unless rule["ipProtocol"] == '-1'
-    rule["fromPort"] = current_resource.from_port
-  	rule["toPort"] = current_resource.to_port
+    rule["fromPort"] = @current_resource.from_port
+  	rule["toPort"] = @current_resource.to_port
   end
   rule
 end
 
-def construct_security_group_options(current_resource)
+def construct_security_group_options
   options = Hash.new
   options[:ip_protocol] = @current_resource.ip_protocol
   if @current_resource.cidr_ip
@@ -120,10 +120,10 @@ def construct_security_group_options(current_resource)
   options
 end
 
-def security_group_exists?(current_resource)
+def security_group_exists?
 	@groupid ||= ec2.security_groups.get_by_id(@current_resource.groupid)
 end
 
-def security_groupname_exists?(current_resource)
-  @groupname ||= ec2.security_groups.all('group-name' => [current_resource.groupname]).first
+def security_groupname_exists?
+  @groupname ||= ec2.security_groups.all('group-name' => [@current_resource.groupname]).first
 end
