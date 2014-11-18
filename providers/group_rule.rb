@@ -91,11 +91,9 @@ def security_group_rule
 end
 
 def current_resource_ip_permissions
-  groups = @current_resource.group ? [{ "userId" => @current_resource.owner, "groupId" => current_resource.group }] : []
-  ipRange = @current_resource.cidr_ip ? [{ "cidrIp" => @current_resource.cidr_ip } ] : []
   rule = {
-  	"groups" 	   => groups,
-  	"ipRanges" 	 => ipRange,
+  	"groups" 	   => @current_resource.group ? [{ "userId" => @current_resource.owner, "groupId" => current_resource.group }] : [],
+  	"ipRanges" 	 => @current_resource.cidr_ip ? [{ "cidrIp" => @current_resource.cidr_ip } ] : [],
   	"ipProtocol" => @current_resource.ip_protocol,
   }
   unless rule["ipProtocol"] == '-1'
