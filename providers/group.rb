@@ -16,10 +16,9 @@ end
 
 action :remove do
   if @current_resource.exists
-    sg = security_group_exists?(@current_resource)
-  	if sg
+  	if security_group
       converge_by("Remvoing #{ @new_resource } security group") do
-  	    sg.destroy
+  	    security_group.destroy
       end
   	else
   	  raise "#{ @new_resource } cannot be removed - configuration mismatch"
@@ -45,8 +44,8 @@ def load_current_resource
   @current_resource.exists = true if security_group_exists?(@current_resource)
 end
 
-def security_group_exists?(current_resource)
-    @sg ||= ec2.security_groups.all('group-name' => [ current_resource.groupname ] ).first
+def security_group
+    @sg ||= ec2.security_groups.all('group-name' => [ @current_resource.groupname ] ).first
 end
 
 def create_security_group(current_resource)
