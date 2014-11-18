@@ -37,16 +37,20 @@ end
 
 def load_current_resource
   @current_resource = Chef::Resource::AwsSecurityGroupRule.new(@new_resource.name)
-  @current_resource.groupname(@new_resource.groupname)
+
   @current_resource.aws_access_key_id(@new_resource.aws_access_key_id || node['aws_security']['aws_access_key_id'])
   @current_resource.aws_secret_access_key(@new_resource.aws_access_key_id || node['aws_security']['aws_secret_access_key'])
-  @current_resource.name(@new_resource.name)
-  @current_resource.cidr_ip(@new_resource.cidr_ip)
-  @current_resource.group(@new_resource.group)
-  @current_resource.ip_protocol(@new_resource.ip_protocol)
-  @current_resource.port_range(@new_resource.port_range)
-  @current_resource.owner(@new_resource.owner)
-  @current_resource.region(@new_resource.region)
+
+  %w(groupname
+     name
+     cidr_ip
+     group
+     ip_protocol
+     port_range
+     owner
+     region).each do |attrib|
+    @current_resource.send(attrib, @new_resource.send(attrib))
+  end
 
   if @current_resource.port_range
     (from_port,to_port) = @current_resource.port_range.split(/\.\./)
