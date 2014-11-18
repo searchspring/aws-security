@@ -106,8 +106,7 @@ def current_resource_ip_permissions
 end
 
 def construct_security_group_options
-  options = Hash.new
-  options[:ip_protocol] = @current_resource.ip_protocol
+  options = { ip_protocol: @current_resource.ip_protocol }
   if @current_resource.cidr_ip
     options[:cidr_ip] = @current_resource.cidr_ip
   else
