@@ -9,7 +9,7 @@ action :create_if_missing do
     Chef::Log.info "#{ @new_resource } already exists - nothing to do."
   else
     converge_by("Creating #{ @new_resource } security group") do
-      create_security_group(@current_resource)
+      create_security_group
     end
   end
 end
@@ -39,7 +39,7 @@ def load_current_resource
   @current_resource.aws_access_key_id(@new_resource.aws_access_key_id || node['aws_security']['aws_access_key_id'])
   @current_resource.aws_secret_access_key(@new_resource.aws_secret_access_key || node['aws_security']['aws_secret_access_key'])
 
-  @current_resource.exists = true if security_group_exists?(@current_resource)
+  @current_resource.exists = true if security_group
 end
 
 def security_group
@@ -47,7 +47,7 @@ def security_group
 end
 
 def create_security_group
-  ec2.security_groups.new(attributes(@current_resource)).save
+  ec2.security_groups.new(attributes).save
 end
 
 def attributes
