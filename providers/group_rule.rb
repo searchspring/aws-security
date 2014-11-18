@@ -8,12 +8,12 @@ action :add do
   if @current_resource.exists
   	Chef::Log.info("#{ @new_resource } already exists -- nothing to do")
   else
-  	if sg = security_group_exists?
+  	if security_group
   	  converge_by("Adding rule #{ @new_resource } to security group") do
         from_port = @current_resource.from_port
         to_port = @current_resource.to_port
         options = construct_security_group_options
-        sg.authorize_port_range(from_port..to_port, options)
+        security_group.authorize_port_range(from_port..to_port, options)
       end
   	else
   	  fail "#{ new_reouce } can not be created -- security group does not exist"
@@ -23,12 +23,11 @@ end
 
 action :remove do
   if @current_resource.exists
-  	sg = security_group_exists?
     converge_by("Removing rule #{ @new_resource } from security group") do
       from_port = @current_resource.from_port
       to_port = @current_resource.to_port
       options = construct_security_group_options
-      sg.revoke_port_range(from_port..to_port, options)
+      security_group.revoke_port_range(from_port..to_port, options)
     end
   else
     Chef::Log.info("#{ @new_resource } does not exists -- nothing to do")
@@ -72,7 +71,7 @@ def load_current_resource
   end 
 end
 
-def security_group_rule_exists?
+def security_group_rule
   return false unless @current_resource.groupid
   sg = security_group_exists?
   # rule we're trying to create
@@ -120,10 +119,10 @@ def construct_security_group_options
   options
 end
 
-def security_group_exists?
+def security_group
 	@groupid ||= ec2.security_groups.get_by_id(@current_resource.groupid)
 end
 
-def security_groupname_exists?
+def security_groupname
   @groupname ||= ec2.security_groups.all('group-name' => [@current_resource.groupname]).first
 end
