@@ -8,16 +8,14 @@ action :add do
   if @current_resource.exists
   	Chef::Log.info("#{ @new_resource } already exists -- nothing to do")
   else
-  	if security_group
-  	  converge_by("Adding rule #{ @new_resource } to security group") do
-        from_port = @current_resource.from_port
-        to_port = @current_resource.to_port
-        options = construct_security_group_options
-        security_group.authorize_port_range(from_port..to_port, options)
-      end
-  	else
-  	  fail "#{ new_reouce } can not be created -- security group does not exist"
-  	end
+  	fail "#{ new_reouce } can not be created -- security group does not " \
+      'exist' unless security_group
+	  converge_by("Adding rule #{ @new_resource } to security group") do
+      from_port = @current_resource.from_port
+      to_port = @current_resource.to_port
+      options = construct_security_group_options
+      security_group.authorize_port_range(from_port..to_port, options)
+    end
   end
 end
 
