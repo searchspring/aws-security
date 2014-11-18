@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'fog', '~>1.23.0'
+gem 'fog', '~> 1.24'
 gem 'berkshelf', '~>3.1.5'
 gem 'chefspec', '~>4.0.1'
 gem 'rspec_junit_formatter', '~>0.1.6'
