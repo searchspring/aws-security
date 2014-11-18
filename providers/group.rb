@@ -42,7 +42,7 @@ def load_current_resource
 end
 
 def security_group_exists?(current_resource)
-    @@sg ||= ec2.security_groups.all('group-name' => [ current_resource.groupname ] ).first
+    @sg ||= ec2.security_groups.all('group-name' => [ current_resource.groupname ] ).first
 end
 
 def create_security_group(current_resource)

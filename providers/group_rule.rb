@@ -91,7 +91,7 @@ def security_group_rule_exists?(current_resource)
 end
 
 def current_resource_ip_permissions(current_resource)
-  @@current_resource_ip_permissions ||= construct_resource_ip_permissions(current_resource)
+  @current_resource_ip_permissions ||= construct_resource_ip_permissions(current_resource)
 end
 
 def construct_resource_ip_permissions(current_resource)
@@ -121,9 +121,9 @@ def construct_security_group_options(current_resource)
 end
 
 def security_group_exists?(current_resource)
-	@@groupid ||= ec2.security_groups.get_by_id(@current_resource.groupid)
+	@groupid ||= ec2.security_groups.get_by_id(@current_resource.groupid)
 end
 
 def security_groupname_exists?(current_resource)
-  @@groupname ||= ec2.security_groups.all('group-name' => [current_resource.groupname]).first
+  @groupname ||= ec2.security_groups.all('group-name' => [current_resource.groupname]).first
 end
