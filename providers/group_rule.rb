@@ -108,7 +108,7 @@ def current_resource_ip_permissions
     "ipRanges" 	 => @current_resource.cidr_ip ?
       [{ "cidrIp" => @current_resource.cidr_ip }] :
       [],
-    "ipProtocol" => @current_resource.ip_protocol,
+    "ipProtocol" => @current_resource.ip_protocol
   }
   unless rule["ipProtocol"] == '-1'
     rule["fromPort"] = @current_resource.from_port
