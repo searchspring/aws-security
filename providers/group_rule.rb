@@ -71,9 +71,8 @@ def load_current_resource
   # else
     # fail "Could not find security groupid for #{ new_resource }"
   end
- if security_group_rule_exists?
-    @current_resource.exists = true
-  end 
+  return unless security_group_rule
+  @current_resource.exists = true
 end
 
 def security_group_rule
