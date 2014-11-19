@@ -82,7 +82,7 @@ def security_group_rule
   # loop through existing rules looking for our new rule
   security_group.ip_permissions.each do |ip_permission|
     # rules are either group based or ip based
-    group_or_ip = @current_resource.group ? "groups" : "ipRanges"
+    group_or_ip = @current_resource.group ? 'groups' : 'ipRanges'
     # if the protocol is '-1' then there aren't from and to ports
     return true if @current_resource.ip_protocol == '-1'
     # loop through options and make sure they match
@@ -101,18 +101,18 @@ end
 
 def current_resource_ip_permissions
   rule = {
-    "groups" 	   => @current_resource.group ?
-      [{ "userId" => @current_resource.owner,
-         "groupId" => current_resource.group }] :
+    'groups' 	   => @current_resource.group ?
+      [{ 'userId' => @current_resource.owner,
+         'groupId' => current_resource.group }] :
       [],
-    "ipRanges" 	 => @current_resource.cidr_ip ?
-      [{ "cidrIp" => @current_resource.cidr_ip }] :
+    'ipRanges' 	 => @current_resource.cidr_ip ?
+      [{ 'cidrIp' => @current_resource.cidr_ip }] :
       [],
-    "ipProtocol" => @current_resource.ip_protocol
+    'ipProtocol' => @current_resource.ip_protocol
   }
-  unless rule["ipProtocol"] == '-1'
-    rule["fromPort"] = @current_resource.from_port
-    rule["toPort"] = @current_resource.to_port
+  unless rule['ipProtocol'] == '-1'
+    rule['fromPort'] = @current_resource.from_port
+    rule['toPort'] = @current_resource.to_port
   end
   rule
 end
