@@ -97,20 +97,24 @@ def security_group_rule
   false
 end
 
+def source_group
+  return [] unless @current_resource.group
+  [{ 'userId' => @current_resource.owner,
+     'groupId' => current_resource.group }]
+end
+
+def source_ip_ranges
+  return [] unless @current_resource.cidr_ip
+  [{ 'cidrIp' => @current_resource.cidr_ip }]
+end
+
 def current_resource_ip_permissions
-  rule = {
-    'groups' 	   => @current_resource.group ?
-      [{ 'userId' => @current_resource.owner,
-         'groupId' => current_resource.group }] :
-      [],
-    'ipRanges' 	 => @current_resource.cidr_ip ?
-      [{ 'cidrIp' => @current_resource.cidr_ip }] :
-      [],
-    'ipProtocol' => @current_resource.ip_protocol
-  }
-  unless rule['ipProtocol'] == '-1'
+  rule = { 'groups'     => source_group,
+           'ipRanges'   => source_ip_ranges,
+           'ipProtocol' => @current_resource.ip_protocol }
+  unless @current_resource.ip_protocol == '-1'
     rule['fromPort'] = @current_resource.from_port
-    rule['toPort'] = @current_resource.to_port
+    rule['toPort']   = @current_resource.to_port
   end
   rule
 end
