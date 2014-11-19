@@ -81,8 +81,6 @@ def security_group_rule
   new_ip_permission = current_resource_ip_permissions
   # loop through existing rules looking for our new rule
   security_group.ip_permissions.each do |ip_permission|
-    # rules are either group based or ip based
-    group_or_ip = @current_resource.group ? 'groups' : 'ipRanges'
     # if the protocol is '-1' then there aren't from and to ports
     return true if @current_resource.ip_protocol == '-1'
     # loop through options and make sure they match
