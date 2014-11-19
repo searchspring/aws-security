@@ -86,7 +86,7 @@ def security_group_rule
     # if the protocol is '-1' then there aren't from and to ports
     return true if @current_resource.ip_protocol == '-1'
     # loop through options and make sure they match
-    properties = %w{group ipProtocol fromPort toPort}
+    properties = %w(group ipProtocol fromPort toPort)
     current_options = Hash.new
     new_options = Hash.new
     properties.map do |key|
