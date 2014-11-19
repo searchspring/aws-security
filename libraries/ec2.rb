@@ -29,10 +29,10 @@ module Aws
         Chef::Log.error("Missing gem 'fog'")
       end
       Fog::Compute.new(
-        :provider              => 'AWS',
-        :aws_access_key_id     => @current_resource.aws_access_key_id,
-        :aws_secret_access_key => @current_resource.aws_secret_access_key,
-        :region                => @current_resource.region
+        provider:              'AWS',
+        aws_access_key_id:     @current_resource.aws_access_key_id,
+        aws_secret_access_key: @current_resource.aws_secret_access_key,
+        region:                @current_resource.region
       )
     end
   end
