@@ -18,22 +18,22 @@
 
 module Aws
   module Ec2
-      def ec2
-        @@ec2 ||= create_aws_interface
-      end
-      def create_aws_interface
-        begin
-          require 'fog'
-        rescue LoadError
-        	Chef::Log.error("Missing gem 'fog'")
-        end
-        Fog::Compute.new(
-      	 :provider 				       => 'AWS',
-       	 :aws_access_key_id		   => @current_resource.aws_access_key_id,
-       	 :aws_secret_access_key  => @current_resource.aws_secret_access_key,
-         :region                 => @current_resource.region
-        )
-      end
+    def ec2
+      @@ec2 ||= create_aws_interface
+    end
 
+    def create_aws_interface
+      begin
+        require 'fog'
+      rescue LoadError
+        Chef::Log.error("Missing gem 'fog'")
+      end
+      Fog::Compute.new(
+        :provider              => 'AWS',
+        :aws_access_key_id     => @current_resource.aws_access_key_id,
+        :aws_secret_access_key => @current_resource.aws_secret_access_key,
+        :region                => @current_resource.region
+      )
+    end
   end
 end
