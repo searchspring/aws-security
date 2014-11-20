@@ -110,14 +110,16 @@ def source_ip_ranges
 end
 
 def current_resource_ip_permissions
-  rule = { 'groups'     => source_group,
-           'ipRanges'   => source_ip_ranges,
-           'ipProtocol' => @current_resource.ip_protocol }
-  unless @current_resource.ip_protocol == '-1'
-    rule['fromPort'] = @current_resource.from_port
-    rule['toPort']   = @current_resource.to_port
+  @current_resource_ip_permissions ||= begin
+    rule = { 'groups'     => source_group,
+             'ipRanges'   => source_ip_ranges,
+             'ipProtocol' => @current_resource.ip_protocol }
+    unless @current_resource.ip_protocol == '-1'
+      rule['fromPort'] = @current_resource.from_port
+      rule['toPort']   = @current_resource.to_port
+    end
+    rule
   end
-  rule
 end
 
 def construct_security_group_options
