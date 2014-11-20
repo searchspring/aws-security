@@ -13,7 +13,7 @@ suites:
     data_bags_path: "test/integration/add_test/data_bags"
     encrypted_data_bag_secret_key_path: "test/integration/add_test/encrypted_data_bag_secret"
     run_list:
-      - recipe[fake::test1]
+      - recipe[fake::add_test]
     attributes: {
       aws_security: {
       	encrypted_data_bag: "aws_security"
@@ -23,7 +23,8 @@ suites:
     data_bags_path: "test/integration/remove_test/data_bags"
     encrypted_data_bag_secret_key_path: "test/integration/remove_test/encrypted_data_bag_secret"
     run_list:
-      - recipe[fake::test2]
+      - recipe[fake::add_test]
+      - recipe[fake::remove_test]
     attributes: {
       aws_security: {
         encrypted_data_bag: "aws_security"
