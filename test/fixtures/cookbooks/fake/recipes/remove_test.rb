@@ -70,6 +70,15 @@ aws_security_group_rule 'test rule 3' do
   action :remove
 end
 
+aws_security_group_rule 'test rule 3 (duplicate)' do
+  cidr_ip '192.168.1.3/32'
+  groupname 'test'
+  region 'us-west-2'
+  port_range '80..80'
+  ip_protocol 'tcp'
+  action :remove
+end
+
 aws_security_group_rule 'test rule 4' do
   group 'sg-16298825'
   groupname 'test'
