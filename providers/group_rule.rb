@@ -99,8 +99,9 @@ end
 
 def source_group
   return [] unless @current_resource.group
-  [{ 'userId' => @current_resource.owner,
-     'groupId' => current_resource.group }]
+  [{ 'groupName' => nil,
+     'userId'    => @current_resource.owner || security_group.owner_id,
+     'groupId'   => current_resource.group }]
 end
 
 def source_ip_ranges
