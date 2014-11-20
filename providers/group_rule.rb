@@ -10,6 +10,7 @@ action :add do
   else
     fail "#{ new_reouce } can not be created -- security group does not " \
       'exist' unless security_group
+    require 'ipaddress'
     converge_by("Adding rule #{ @new_resource } to security group") do
       from_port = @current_resource.from_port
       to_port = @current_resource.to_port
@@ -20,7 +21,7 @@ action :add do
 end
 
 action :remove do
-  if @current_resource.exists
+  if @current_resource.exists && security_group_rule_exact_match?
     converge_by("Removing rule #{ @new_resource } from security group") do
       from_port = @current_resource.from_port
       to_port = @current_resource.to_port
@@ -71,30 +72,73 @@ def load_current_resource
   else
     return false
   end
-  return unless security_group_rule
-  @current_resource.exists = true
+  @current_resource.exists = security_group_rule_exists?
 end
 
-def security_group_rule
-  return false unless @current_resource.groupid
-  # rule we're trying to create
-  new_ip_permission = current_resource_ip_permissions
-  # loop through existing rules looking for our new rule
+def security_group_rule_exact_match?
   security_group.ip_permissions.each do |ip_permission|
-    # if the protocol is '-1' then there aren't from and to ports
-    return true if @current_resource.ip_protocol == '-1'
-    # loop through options and make sure they match
-    properties = %w(group ipProtocol fromPort toPort)
-    current_options = Hash.new
-    new_options = Hash.new
-    properties.map do |key|
-      current_options[key] = ip_permission[key]
-      new_options[key] = new_ip_permission[key]
-    end
-    return true if current_options.eql? new_options
+    return true if permission_exact_match? ip_permission
   end
-  # didn't match anything above, rule doesn't exist
+end
+
+# rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
+# rubocop:disable Metrics/MethodLength
+def permission_exact_match?(existing_rule)
+  return false unless current_resource_ip_permissions['groups'].eql?(
+                        existing_rule['groups']
+                      )
+  return false unless current_resource_ip_permissions['ipProtocol'] ==
+                      existing_rule['ipProtocol']
+  return false unless
+    current_resource_ip_permissions['ipRanges'].sort_by { |r| r['cidrIp'] } ==
+    existing_rule['ipRanges'].sort_by { |r| r['cidrIp'] }
+  unless current_resource_ip_permissions['ipProtocol'] == '-1'
+    return false unless existing_rule['fromPort'] ==
+                        current_resource_ip_permissions['fromPort'] &&
+                        existing_rule['toPort'] ==
+                        current_resource_ip_permissions['toPort']
+  end
+  true
+end
+# rubocop:enable Metrics/MethodLength
+# rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity
+
+def security_group_rule_exists?
+  security_group.ip_permissions.each do |ip_permission|
+    return true if permissions_overlap? ip_permission
+  end
   false
+end
+
+def permissions_overlap?(existing_rule)
+  if permission_exact_match?(existing_rule)
+    Chef::Log.debug('Permissions match exactly')
+    return true
+  end
+  return false unless !current_resource_ip_permissions['ipRanges'].empty? &&
+                      ip_range_covered?(existing_rule['ipRanges'])
+  return false unless current_resource_ip_permissions['ipProtocol'] != '-1' &&
+                      port_range_overlap?(existing_rule['fromPort'],
+                                          existing_rule['toPort'])
+  true
+end
+
+def ip_range_covered?(existing_ranges)
+  return true if (current_resource_ip_permissions['ipRanges'] -
+                  existing_ranges).empty?
+  current_resource_ip_permissions['ipRanges'].each do |new_range|
+    existing_ranges.each do |existing_range|
+      return true if IPAddr.new(existing_range['cidrIp']).include?(
+                       IPAddr.new(new_range['cidrIp'])
+                     )
+    end
+  end
+  false
+end
+
+def port_range_overlap?(existing_from_port, existing_to_port)
+  existing_from_port <= current_resource_ip_permissions['fromPort'] &&
+    existing_to_port >= current_resource_ip_permissions['toPort']
 end
 
 def source_group
