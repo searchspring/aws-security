@@ -1,8 +1,7 @@
 require 'serverspec'
 require 'json'
 
-include SpecInfra::Helper::Exec  
-include SpecInfra::Helper::DetectOS
+set :backend, :exec
 
 RSpec.configure do |c|  
   if ENV['ASK_SUDO_PASSWORD']
@@ -11,5 +10,4 @@ RSpec.configure do |c|
   else
     c.sudo_password = ENV['SUDO_PASSWORD']
   end
-  c.os = backend.check_os
 end  
