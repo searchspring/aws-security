@@ -131,12 +131,13 @@ def construct_security_group_options
 end
 
 def security_group
-  @groupid ||= ec2.security_groups.get_by_id(@current_resource.groupid)
+  @security_group ||= ec2.security_groups.get_by_id(@current_resource.groupid)
 end
 
 def security_groupname
-  @groupname ||=
+  @security_groupname ||= begin
     ec2.security_groups.all(
       'group-name' => [@current_resource.groupname]
     ).first
+  end
 end
