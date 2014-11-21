@@ -53,7 +53,8 @@ def load_current_resource
      ip_protocol
      port_range
      owner
-     region).each do |attrib|
+     region
+  ).each do |attrib|
     @current_resource.send(attrib, @new_resource.send(attrib))
   end
 
@@ -114,6 +115,12 @@ def permissions_overlap?(existing_rule)
   if permission_exact_match?(existing_rule)
     Chef::Log.debug('Permissions match exactly')
     return true
+  end
+  if current_resource_ip_permissions['groups'].any? && existing_rule['groups'].any?
+    if current_resource_ip_permissions['groups'].first['groupid'] == existing_rule['groups'].first['groupid']
+      return true if port_range_overlap?(existing_rule['fromPort'],
+                                          existing_rule['toPort'])
+    end
   end
   return false unless !current_resource_ip_permissions['ipRanges'].empty? &&
                       ip_range_covered?(existing_rule['ipRanges'])
