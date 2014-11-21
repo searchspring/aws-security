@@ -16,5 +16,7 @@ attribute :aws_secret_access_key, :kind_of => String, :required => false
 attribute :region,				  :kind_of => String, :default => 'us-east-1'
 attribute :from_port,			  :kind_of => Integer, :default => 0
 attribute :to_port,               :kind_of => Integer, :default => 65535
+attribute :mocking,               kind_of: [TrueClass, FalseClass],
+                                  default: false
 
 attr_accessor :exists

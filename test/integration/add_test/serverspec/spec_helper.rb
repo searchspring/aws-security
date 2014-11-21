@@ -1,5 +1,6 @@
 require 'serverspec'
 require 'json'
+require 'fog'
 
 set :backend, :exec
 
@@ -11,3 +12,7 @@ RSpec.configure do |c|
     c.sudo_password = ENV['SUDO_PASSWORD']
   end
 end  
+
+def ec2
+  @ec2 ||= Fog::Compute::AWS.new(host: 'localhost', port: 5000, scheme: 'http')
+end
