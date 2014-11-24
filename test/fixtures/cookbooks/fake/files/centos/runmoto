@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+/usr/bin/moto_server -H 127.0.0.1 ec2 &
