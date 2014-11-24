@@ -20,10 +20,8 @@
 # limitations under the License.
 #
 
-include_recipe "build-essential"
-chef_gem "fog" do
-  version '~> 1.24'
-end
+include_recipe "fog_gem::chefgem"
+
 
 if node['aws_security']['encrypted_data_bag']
   databag_item = Chef::EncryptedDataBagItem.load(

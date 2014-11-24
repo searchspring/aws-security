@@ -8,7 +8,7 @@ This cookbook provides libraries, resource and providers to config and mangage A
 Requirements
 ============
 ## Cookbooks
-* build-essential
+* fog_gem
 
 ## Gems
 * fog
