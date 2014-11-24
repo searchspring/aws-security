@@ -1,6 +1,7 @@
 include_recipe 'python'
 
 python_pip 'moto'
+python_pip 'argparse'
 
 cookbook_file '/usr/local/bin/runmoto' do
   source 'runmoto'
