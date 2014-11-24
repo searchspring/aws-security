@@ -45,6 +45,8 @@ def load_current_resource
     @new_resource.aws_access_key_id ||
     node['aws_security']['aws_secret_access_key']
   )
+  @current_resource.mocking(@new_resource.mocking ||
+                            node['aws_security']['mocking'])
 
   %w(groupname
      name
