@@ -1,16 +1,13 @@
 require 'spec_helper'
 
 describe "it should create a security group named 'test" do
-  # output = command('aws ec2 describe-security-groups --region us-west-2 --group-names test').stdout
-  sg = ec2.security_groups.all('group-name' => 'test').first.attributes
-  # json = JSON.parse(output)
-  # sg = json["SecurityGroups"].first
-  describe Hash do
-    subject {sg}
+  sg              = ec2.security_groups.all('group-name' => 'test').first
+
+  describe sg.attributes do
     it { should include(name: "test") }
     it { should include(description: "test security group") }
   end
-  describe sg[:ip_permissions] do
+  describe sg.ip_permissions do
     it { should include("toPort"     => 80,
                         "ipProtocol" => "tcp",
                         "ipRanges"   => [],
