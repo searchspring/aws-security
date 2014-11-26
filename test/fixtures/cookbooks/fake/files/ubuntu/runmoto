@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+start-stop-daemon --start --background --make-pidfile \
+  --pidfile /var/run/moto_server --exec /usr/local/bin/moto_server -- \
+    -H 127.0.0.1 ec2
