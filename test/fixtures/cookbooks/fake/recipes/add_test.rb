@@ -42,9 +42,16 @@ template '/root/.aws/config' do
   )
 end
 
+credentials = Chef::EncryptedDataBagItem.load(
+  node['aws_security']['encrypted_data_bag'],
+  'aws_keys'
+)
+
 aws_security_group 'test' do
   description 'test security group'
   region 'us-west-2'
+  aws_access_key_id credentials['aws_access_key_id']
+  aws_secret_access_key credentials['aws_secret_access_key']
 end
 
 aws_security_group_rule 'test rule 1' do
@@ -54,6 +61,8 @@ aws_security_group_rule 'test rule 1' do
   region 'us-west-2'
   port_range '80..80'
   ip_protocol 'tcp'
+  aws_access_key_id credentials['aws_access_key_id']
+  aws_secret_access_key credentials['aws_secret_access_key']
 end
 
 aws_security_group_rule 'test rule 2' do
@@ -62,6 +71,8 @@ aws_security_group_rule 'test rule 2' do
   region 'us-west-2'
   port_range '80..80'
   ip_protocol 'udp'
+  aws_access_key_id credentials['aws_access_key_id']
+  aws_secret_access_key credentials['aws_secret_access_key']
 end
 
 aws_security_group_rule 'test rule 3' do
@@ -70,6 +81,8 @@ aws_security_group_rule 'test rule 3' do
   region 'us-west-2'
   port_range '80..80'
   ip_protocol 'tcp'
+  aws_access_key_id credentials['aws_access_key_id']
+  aws_secret_access_key credentials['aws_secret_access_key']
 end
 
 aws_security_group_rule 'test rule 3 (duplicate)' do
@@ -78,6 +91,8 @@ aws_security_group_rule 'test rule 3 (duplicate)' do
   region 'us-west-2'
   port_range '80..80'
   ip_protocol 'tcp'
+  aws_access_key_id credentials['aws_access_key_id']
+  aws_secret_access_key credentials['aws_secret_access_key']
 end
 
 aws_security_group_rule 'test rule 4' do
@@ -86,6 +101,8 @@ aws_security_group_rule 'test rule 4' do
   region 'us-west-2'
   port_range '80..80'
   ip_protocol 'tcp'
+  aws_access_key_id credentials['aws_access_key_id']
+  aws_secret_access_key credentials['aws_secret_access_key']
 end
 
 aws_security_group_rule 'test rule 5' do
@@ -93,4 +110,6 @@ aws_security_group_rule 'test rule 5' do
   groupname 'test'
   region 'us-west-2'
   ip_protocol 'tcp'
+  aws_access_key_id credentials['aws_access_key_id']
+  aws_secret_access_key credentials['aws_secret_access_key']
 end

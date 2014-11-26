@@ -37,16 +37,12 @@ def load_current_resource
   @current_resource =
     Chef::Resource::AwsSecurityGroupRule.new(@new_resource.name)
 
-  @current_resource.aws_access_key_id(
-    @new_resource.aws_access_key_id ||
-    node['aws_security']['aws_access_key_id']
-  )
-  @current_resource.aws_secret_access_key(
-    @new_resource.aws_access_key_id ||
-    node['aws_security']['aws_secret_access_key']
-  )
+  @current_resource.mocking(@new_resource.mocking ||
+                            node['aws_security']['mocking'])
 
-  %w(groupname
+  %w(aws_access_key_id
+     aws_secret_access_key
+     groupname
      name
      cidr_ip
      group
