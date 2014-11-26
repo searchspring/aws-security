@@ -60,6 +60,14 @@ def load_current_resource
     @current_resource.send(attrib, @new_resource.send(attrib))
   end
 
+  if @new_resource.group
+    if group_is_id?(@new_resource.group)
+      @current_resource.source_group_id(@new_resource.group)
+    else
+      @current_resource.source_group_name(@new_resource.group)
+    end
+  end
+
   if @current_resource.port_range
     (from_port, to_port) = @current_resource.port_range.split(/\.\./)
     @current_resource.from_port(from_port.to_i)
@@ -76,6 +84,11 @@ def load_current_resource
     return false
   end
   @current_resource.exists = security_group_rule_exists?
+end
+
+def group_is_id?(group)
+  return true if group =~ /^sg-[a-zA-Z0-9]{8}$/
+  false
 end
 
 def security_group_rule_exact_match?
@@ -150,12 +163,21 @@ def port_range_overlap?(existing_from_port, existing_to_port)
     existing_to_port >= current_resource_ip_permissions['toPort']
 end
 
+# rubocop:disable Metrics/MethodLength
 def source_group
-  return [] unless @current_resource.group
-  [{ 'groupName' => nil,
-     'userId'    => @current_resource.owner || security_group.owner_id,
-     'groupId'   => current_resource.group }]
+  return [] unless @current_resource.source_group_id ||
+                   @current_resource.source_group_name
+  o = { 'userId' => @current_resource.owner || security_group.owner_id }
+  if @current_resource.source_group_id
+    o['groupName'] = nil
+    o['groupId']   = @current_resource.group
+  else
+    o['groupName'] = @current_resource.source_group_name
+    o['groupId']   = nil
+  end
+  [o]
 end
+# rubocop:enable Metrics/MethodLength
 
 def source_ip_ranges
   return [] unless @current_resource.cidr_ip
