@@ -18,6 +18,9 @@ attribute :cidr_ip,               kind_of: String,
 attribute :group,                 kind_of: String,
                                   callbacks: { 'is not a valid group name/ID' =>
                                                ->(n) { valid_group?(n) } }
+attribute :source_group_id,       kind_of: String,
+                                  regex: [/^sg-[a-zA-Z0-9]{8}$/]
+attribute :source_group_name,     kind_of: String
 attribute :owner,                 kind_of: String
 attribute :ip_protocol,           kind_of: String,
                                   default: '-1',
