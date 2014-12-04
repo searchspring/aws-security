@@ -27,6 +27,11 @@ credentials = Chef::EncryptedDataBagItem.load(
   'aws_keys'
 )
 
+credentials = Chef::EncryptedDataBagItem.load(
+  node['aws_security']['encrypted_data_bag'],
+  'aws_keys'
+)
+
 aws_security_group 'test' do
   description 'test security group'
   region 'us-west-2'
