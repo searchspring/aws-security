@@ -27,12 +27,16 @@ module Aws
         rescue LoadError
         	Chef::Log.error("Missing gem 'fog'")
         end
-        options = {
-          :provider               => 'AWS',
-          :aws_access_key_id      => @current_resource.aws_access_key_id,
-          :aws_secret_access_key  => @current_resource.aws_secret_access_key,
-          :region                 => @current_resource.region
-        }
+        options = { provider: 'AWS', region: @current_resource.region }
+
+        if @current_resource.aws_access_key_id
+          # Only pass credentials if we have them. This allows Fog to fall back
+          # to IAM roles.
+          options[:aws_access_key_id] = @current_resource.aws_access_key_id
+          options[:aws_secret_access_key] =
+            @current_resource.aws_secret_access_key
+        end
+
         if @current_resource.mocking
           options[:host]   = 'localhost'
           options[:port]   = 5000

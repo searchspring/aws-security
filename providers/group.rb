@@ -39,9 +39,10 @@ def load_current_resource
     @current_resource.send(attrib, @new_resource.send(attrib))
   end
 
-  @current_resource.mocking(@new_resource.mocking ||
-                            node['aws_security']['mocking'])
-
+  if @new_resource.aws_access_key_id || node['aws_security']['aws_access_key_id']
+    @current_resource.mocking(@new_resource.mocking ||
+      node['aws_security']['mocking'])
+  end
   @current_resource.exists = true if security_group
 end
 
