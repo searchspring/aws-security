@@ -22,13 +22,3 @@
 
 include_recipe "fog_gem::chefgem"
 
-
-if node['aws_security']['encrypted_data_bag']
-  databag_item = Chef::EncryptedDataBagItem.load(
-    node['aws_security']['encrypted_data_bag'],
-  	'aws_keys'
-  )
-  node.set['aws_security']['aws_access_key_id'] = databag_item['aws_access_key_id']
-  node.set['aws_security']['aws_secret_access_key'] = databag_item['aws_secret_access_key']
-end
-
