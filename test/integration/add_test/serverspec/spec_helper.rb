@@ -1,4 +1,5 @@
 require 'serverspec'
+require 'rspec/collection_matchers'
 require 'fog'
 
 set :backend, :exec

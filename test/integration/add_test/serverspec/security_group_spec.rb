@@ -2,42 +2,50 @@ require 'spec_helper'
 
 describe "it should create a security group named 'test" do
   sg              = ec2.security_groups.all('group-name' => 'test').first
+  source_group_id = ec2.security_groups.all(
+                      'group-name' => 'test_source_group'
+                    ).first.group_id
+  user_id         = '111122223333'
 
   describe sg.attributes do
     it { should include(name: "test") }
     it { should include(description: "test security group") }
   end
   describe sg.ip_permissions do
-    it { should include("toPort"     => 80,
+    it { should have_exactly(5).entries }
+    it { should include("fromPort"   => 80,
+                        "toPort"     => 80,
                         "ipProtocol" => "tcp",
-                        "ipRanges"   => [],
-                        "groups"     => [{"userId"  =>  sg[:owner_id],
-                                          "groupId" => "sg-9b1a8ffe"}],
-                        "fromPort"   => 80)
+                        "ipRanges"   => [{"cidrIp" => "192.168.1.1/32"}],
+                         "groups"    => [])
     }
-    it { should include("toPort"     => 65535,
-                        "ipProtocol" => "tcp",
-                        "ipRanges"   => [],
-                        "groups"     => [{"userId"  =>  sg[:owner_id],
-                                          "groupId" => "sg-9b1a8ffe"}],
-                        "fromPort"   => 0)
-    }
-    it { should include("toPort"     => 80,
-                        "ipProtocol" => "tcp",
-                        "ipRanges"   => [{"cidrIp" => "192.168.1.1/32"}, 
-                                         {"cidrIp" => "192.168.1.3/32"}],
-                         "groups"    => [],
-                         "fromPort"  => 80)
-    }
-    it { should include("ipProtocol" => "-1", 
-                        "ipRanges"   => [{"cidrIp" => "192.168.1.3/32"}],
-                        "groups"     => [])
-    }
-    it { should include("toPort"     => 80,
+    it { should include("fromPort"   => 80,
+                        "toPort"     => 80,
                         "ipProtocol" => "udp",
                         "ipRanges"   => [{"cidrIp" => "192.168.1.2/32"}],
-                        "groups"     => [],
-                        "fromPort"   => 80)
+                        "groups"     => [])
+    }
+    it { should include("fromPort"   => 80,
+                        "toPort"     => 80,
+                        "ipProtocol" => "tcp",
+                        "ipRanges"   => [{"cidrIp" => "192.168.1.3/32"}],
+                         "groups"    => [])
+    }
+    it { should include("fromPort"   => 80,
+                        "toPort"     => 80,
+                        "ipProtocol" => "tcp",
+                        "ipRanges"   => [],
+                        "groups"     => [{"userId"    => user_id,
+                                          "groupName" => "test_source_group",
+                                          "groupId"   => source_group_id}])
+    }
+    it { should include("fromPort"   => 0,
+                        "toPort"     => 65535,
+                        "ipProtocol" => "tcp",
+                        "ipRanges"   => [],
+                        "groups"     => [{"userId"    => user_id,
+                                          "groupName" => "test_source_group",
+                                          "groupId"   => source_group_id}])
     }
   end
 end

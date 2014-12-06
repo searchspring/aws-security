@@ -21,26 +21,6 @@
 #
 
 include_recipe 'aws_security::default'
-include_recipe 'python'
-
-python_pip 'awscli'
-
-directory '/root/.aws' do
-  owner 'root'
-  group 'root'
-  mode '0755'
-  action :create
-end
-
-template '/root/.aws/config' do
-  source 'aws_config.erb'
-  owner 'root'
-  group 'root'
-  variables(
-    aws_access_key_id: node['aws_security']['aws_access_key_id'],
-    aws_secret_access_key: node['aws_security']['aws_secret_access_key']
-  )
-end
 
 credentials = Chef::EncryptedDataBagItem.load(
   node['aws_security']['encrypted_data_bag'],
