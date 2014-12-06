@@ -5,6 +5,7 @@ def whyrun_supported?
 end
 
 action :add do
+  validate!
   if @current_resource.exists
     Chef::Log.info("#{ @new_resource } already exists -- nothing to do")
   else
@@ -32,6 +33,20 @@ action :remove do
     Chef::Log.info("#{ @new_resource } does not exists -- nothing to do")
   end
 end
+
+# rubocop:disable Metrics/CyclomaticComplexity
+def validate!
+  if @new_resource.group &&
+     (@new_resource.source_group_name ||
+      @new_resource.source_group_id)
+    fail 'Cannot specify group and a source_group_* parameter at the same time'
+  end
+  return true unless @new_resource.source_group_name &&
+                     @new_resource.source_group_id
+  fail 'source_group_name and source_group_id cannot be specified at the ' \
+       'same time.'
+end
+# rubocop:enable Metrics/CyclomaticComplexity
 
 def load_current_resource
   @current_resource =
