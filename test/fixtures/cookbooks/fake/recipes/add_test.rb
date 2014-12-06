@@ -39,6 +39,13 @@ aws_security_group 'test' do
   aws_secret_access_key credentials['aws_secret_access_key']
 end
 
+aws_security_group 'test_source_group' do
+  description 'test source security group'
+  region 'us-west-2'
+  aws_access_key_id credentials['aws_access_key_id']
+  aws_secret_access_key credentials['aws_secret_access_key']
+end
+
 aws_security_group_rule 'test rule 1' do
   description 'test rule 1'
   cidr_ip '192.168.1.1/32'
@@ -81,7 +88,7 @@ aws_security_group_rule 'test rule 3 (duplicate)' do
 end
 
 aws_security_group_rule 'test rule 4' do
-  group 'sg-16298825'
+  group 'test_source_group'
   groupname 'test'
   region 'us-west-2'
   port_range '80..80'
@@ -91,7 +98,17 @@ aws_security_group_rule 'test rule 4' do
 end
 
 aws_security_group_rule 'test rule 5' do
-  group 'sg-16298825'
+  group 'test_source_group'
+  groupname 'test'
+  region 'us-west-2'
+  ip_protocol 'tcp'
+  aws_access_key_id credentials['aws_access_key_id']
+  aws_secret_access_key credentials['aws_secret_access_key']
+end
+
+aws_security_group_rule 'test rule 5' do
+  group 'test_source_group'
+  source_group_name 'test_source_group'
   groupname 'test'
   region 'us-west-2'
   ip_protocol 'tcp'

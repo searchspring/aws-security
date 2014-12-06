@@ -73,7 +73,7 @@ aws_security_group_rule 'test rule 3 (duplicate)' do
 end
 
 aws_security_group_rule 'test rule 4' do
-  group 'sg-16298825'
+  group 'test_source_group'
   groupname 'test'
   region 'us-west-2'
   port_range '80..80'
@@ -84,7 +84,7 @@ aws_security_group_rule 'test rule 4' do
 end
 
 aws_security_group_rule 'test rule 5' do
-  group 'sg-16298825'
+  group 'test_source_group'
   groupname 'test'
   region 'us-west-2'
   ip_protocol 'tcp'
