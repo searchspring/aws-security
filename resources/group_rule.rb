@@ -23,7 +23,7 @@ attribute :source_group_id,       kind_of: String,
 attribute :source_group_name,     kind_of: String
 attribute :owner,                 kind_of: String
 attribute :ip_protocol,           kind_of: String,
-                                  default: '-1',
+                                  default: 'tcp',
                                   equal_to: %w(-1 tcp udp icmp)
 attribute :port_range,            kind_of: String
 attribute :aws_access_key_id,     kind_of: String, required: false
