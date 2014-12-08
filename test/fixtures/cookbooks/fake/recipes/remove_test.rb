@@ -21,26 +21,6 @@
 #
 
 include_recipe 'aws_security::default'
-include_recipe 'python'
-
-python_pip 'awscli'
-
-directory '/root/.aws' do
-  owner 'root'
-  group 'root'
-  mode '0755'
-  action :create
-end
-
-template '/root/.aws/config' do
-  source 'aws_config.erb'
-  owner 'root'
-  group 'root'
-  variables(
-    aws_access_key_id: node['aws_security']['aws_access_key_id'],
-    aws_secret_access_key: node['aws_security']['aws_secret_access_key']
-  )
-end
 
 credentials = Chef::EncryptedDataBagItem.load(
   node['aws_security']['encrypted_data_bag'],
@@ -93,7 +73,7 @@ aws_security_group_rule 'test rule 3 (duplicate)' do
 end
 
 aws_security_group_rule 'test rule 4' do
-  group 'sg-16298825'
+  group 'test_source_group'
   groupname 'test'
   region 'us-west-2'
   port_range '80..80'
@@ -104,7 +84,7 @@ aws_security_group_rule 'test rule 4' do
 end
 
 aws_security_group_rule 'test rule 5' do
-  group 'sg-16298825'
+  group 'test_source_group'
   groupname 'test'
   region 'us-west-2'
   ip_protocol 'tcp'
