@@ -111,7 +111,7 @@ Attribute Parameters:
 * `cidr_ip` - optional
 * `group` - optional
 * `owner` - optional
-* `ip_protocolo` - optional, (must be one of the following [-1,udp,tcp,icmp])
+* `ip_protocol` - optional, (must be one of the following [-1,udp,tcp,icmp])
 * `port_range` - optional (port..port)
 * `from_port` - optional
 * `to_port` - optional
