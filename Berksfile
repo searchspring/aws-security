@@ -1,9 +1,8 @@
-source "https://api.berkshelf.com"
+source 'https://supermarket.chef.io'
 
 metadata
 
 cookbook 'build-essential', '~> 2.0.6'
-cookbook 'fog_gem', '~> 0.1.1'
 cookbook 'nokogiri', '~> 0.1.1'
 cookbook 'libxml2', '~> 0.1.1'
 
