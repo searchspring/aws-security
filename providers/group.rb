@@ -49,7 +49,7 @@ end
 def security_group
   @sg ||= ec2.security_groups.all(
             'group-name' => [@current_resource.groupname]
-          ).first
+          ).find { |g| g.vpc_id == @current_resource.vpcid }
 end
 
 def create_security_group
