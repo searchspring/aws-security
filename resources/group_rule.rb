@@ -43,7 +43,7 @@ rescue ArgumentError => e
 end
 
 def self.valid_group?(group)
-  return true if group =~ /^[\w-]+$/
+  return true if group =~ /^[ \w-]+$/
   false
 end
 
