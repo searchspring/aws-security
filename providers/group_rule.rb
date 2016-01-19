@@ -141,7 +141,7 @@ def permissions_overlap?(existing_rule)
     return true
   end
   if current_resource_ip_permissions['groups'].any? && existing_rule['groups'].any?
-    if current_resource_ip_permissions['groups'].first['groupid'] == existing_rule['groups'].first['groupid']
+    if existing_rule['groups'].any? { |r| r['groupId'] == current_resource_ip_permissions['groups'].first['groupId'] }
       return true if port_range_overlap?(existing_rule['fromPort'],
                                           existing_rule['toPort'])
     end
