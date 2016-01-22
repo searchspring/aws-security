@@ -70,6 +70,7 @@ Creates and destroys security groups
 Actions:
 * `create_if_missing` - Creates a new security group if it doesn' alreay exist (default action)
 * `remove` - Removes an existing security group
+* `attach` - Attaches the instance where Chef is running to an existing security group
 
 Attribute Parameters:
 * `groupname` - Name attribute
