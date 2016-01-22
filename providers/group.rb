@@ -26,6 +26,14 @@ action :remove do
   end
 end
 
+action :attach do
+  if @current_resource.exists
+    add_instance_to_security_group(instance)
+  else
+    fail "#{ @new_resource } does not exist - unable to attach."
+  end
+end
+
 def load_current_resource
   @current_resource =
     Chef::Resource::AwsSecurityGroup.new(@new_resource.groupname)
@@ -56,6 +64,14 @@ def create_security_group
   ec2.security_groups.new(attributes).save
 end
 
+def add_instance_to_security_group(instance)
+  existing_groups = instance.network_interfaces.first['groupIds']
+
+  unless existing_groups.include?(security_group.group_id)
+    ec2.modify_instance_attribute(instance.id, {'GroupId' => (existing_groups + [security_group.group_id])})
+  end
+end
+
 def attributes
   attributes = {
     name:        @current_resource.groupname,
@@ -64,4 +80,14 @@ def attributes
   }
   attributes[:vpc_id] = @current_resource.vpcid if @current_resource.vpcid
   attributes
+end
+
+def instance
+  instance_host = '169.254.169.254'
+  instance_id_url = '/latest/meta-data/instance-id'
+
+  httpcall = Net::HTTP.new(instance_host)
+  resp = httpcall.get2(instance_id_url)
+
+  @instance ||= ec2.servers.get(resp.body)
 end
