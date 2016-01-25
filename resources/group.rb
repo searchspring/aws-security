@@ -1,4 +1,4 @@
-actions :create_if_missing, :remove, :attach
+actions :create_if_missing, :remove, :attach, :create_and_attach, :detach
 
 default_action :create_if_missing
 
