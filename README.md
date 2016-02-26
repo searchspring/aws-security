@@ -84,12 +84,14 @@ Attribute Parameters:
 
 ## Usage
 
+```
 aws_security_group 'Example' do
   description "Example Security Group"
   aws_access_key_id node['aws_security']['aws_access_key_id'] 
   aws_secret_access_key node['aws_security']['aws_secret_access_key']
   region 'us-west-2'
 end
+```
 
 
 `aws_security_group_rule`
