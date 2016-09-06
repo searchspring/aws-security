@@ -11,7 +11,7 @@ action :add do
   if @current_resource.exists
     Chef::Log.info("#{@new_resource} already exists -- nothing to do")
   else
-    raise "#{new_resource} can not be created -- security group does not " \
+    raise "#{new_resource} can not be created -- security group '#{security_group}' does not " \
       'exist' unless security_group
     require 'ipaddress'
     converge_by("Adding rule #{@new_resource} to security group") do
