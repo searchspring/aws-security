@@ -1,14 +1,10 @@
 require_relative '../spec_helper'
 
 describe 'aws_security::default' do
-  before do
+  let(:chef_run) { ChefSpec::SoloRunner.converge(described_recipe) }
+
+  it 'converges successfully' do
+    expect { :chef_run }.to_not raise_error
   end
-  subject do
-    runner = ChefSpec::SoloRunner.new
-    runner.node.set['memory']['total'] = '1696516kb'
-    runner.node.set['lsb']['codename'] = 'rhel'
-    runner.node.set['name'] = 'rspec'
-    runner.converge(described_recipe)
-  end
-  it { should include_recipe 'fog_gem::chefgem' }
+
 end

@@ -1,5 +1,5 @@
 require 'serverspec'
-require 'fog'
+require 'fog-aws'
 
 set :backend, :exec
 
