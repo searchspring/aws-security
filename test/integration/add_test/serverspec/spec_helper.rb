@@ -1,6 +1,6 @@
 require 'serverspec'
 require 'rspec/collection_matchers'
-require 'fog-aws'
+require 'fog/aws'
 
 set :backend, :exec
 
