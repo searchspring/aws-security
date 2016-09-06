@@ -4,6 +4,8 @@ def whyrun_supported?
   true
 end
 
+use_inline_resources
+
 action :add do
   validate!
   if @current_resource.exists
