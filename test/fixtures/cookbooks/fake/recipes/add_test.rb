@@ -20,8 +20,6 @@
 # limitations under the License.
 #
 
-include_recipe 'aws_security::default'
-
 credentials = Chef::EncryptedDataBagItem.load(
   node['aws_security']['encrypted_data_bag'],
   'aws_keys'
