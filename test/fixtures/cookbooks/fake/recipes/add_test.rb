@@ -20,12 +20,7 @@
 # limitations under the License.
 #
 
-credentials = Chef::EncryptedDataBagItem.load(
-  node['aws_security']['encrypted_data_bag'],
-  'aws_keys'
-)
-
-credentials = Chef::EncryptedDataBagItem.load(
+credentials = data_bag_item(
   node['aws_security']['encrypted_data_bag'],
   'aws_keys'
 )
