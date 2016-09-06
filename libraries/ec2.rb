@@ -25,12 +25,14 @@ module Aws
 
     def create_aws_interface
       begin
-        require 'fog-aws'
+        require 'fog/aws'
       rescue LoadError
         chef_gem 'fog-aws' do
           compile_time true if Chef::Resource::ChefGem.method_defined?(:compile_time)
           action :install
         end
+
+        require 'fog/aws'
       end
       options = { provider: 'AWS', region: @current_resource.region }
 

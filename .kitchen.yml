@@ -1,4 +1,3 @@
----
 driver:
   name: vagrant
 
@@ -6,12 +5,15 @@ provisioner:
   name: chef_zero
 
 platforms:
-  - name: centos-6.5
+  - name: centos-6.8
+  - name: centos-7.2
+  - name: ubuntu-14.04
+  - name: ubuntu-16.04
 
 suites:
   - name: add_test
-    data_bags_path: "test/integration/add_test/data_bags"
-    encrypted_data_bag_secret_key_path: "test/integration/add_test/encrypted_data_bag_secret"
+    data_bags_path: "test/fixtures/data_bags"
+    encrypted_data_bag_secret_key_path: "test/fixtures/encrypted_data_bag_secret"
     run_list:
       - recipe[fake::aws_mock]
       - recipe[fake::add_test]
@@ -21,8 +23,8 @@ suites:
         encrypted_data_bag: aws_security
 
   - name: remove_test
-    data_bags_path: "test/integration/remove_test/data_bags"
-    encrypted_data_bag_secret_key_path: "test/integration/remove_test/encrypted_data_bag_secret"
+    data_bags_path: "test/fixtures/data_bags"
+    encrypted_data_bag_secret_key_path: "test/fixtures/encrypted_data_bag_secret"
     run_list:
       - recipe[fake::aws_mock]
       - recipe[fake::add_test]
