@@ -4,15 +4,17 @@ def whyrun_supported?
   true
 end
 
+use_inline_resources
+
 action :add do
   validate!
   if @current_resource.exists
-    Chef::Log.info("#{ @new_resource } already exists -- nothing to do")
+    Chef::Log.info("#{@new_resource} already exists -- nothing to do")
   else
-    fail "#{ new_resource } can not be created -- security group does not " \
+    raise "#{new_resource} can not be created -- security group does not " \
       'exist' unless security_group
     require 'ipaddress'
-    converge_by("Adding rule #{ @new_resource } to security group") do
+    converge_by("Adding rule #{@new_resource} to security group") do
       from_port = @current_resource.from_port
       to_port = @current_resource.to_port
       security_group.authorize_port_range(from_port..to_port,
@@ -23,27 +25,26 @@ end
 
 action :remove do
   if @current_resource.exists && security_group_rule_exact_match?
-    converge_by("Removing rule #{ @new_resource } from security group") do
+    converge_by("Removing rule #{@new_resource} from security group") do
       from_port = @current_resource.from_port
       to_port = @current_resource.to_port
       security_group.revoke_port_range(from_port..to_port,
                                        construct_security_group_options)
     end
   else
-    Chef::Log.info("#{ @new_resource } does not exists -- nothing to do")
+    Chef::Log.info("#{@new_resource} does not exists -- nothing to do")
   end
 end
 
-# rubocop:disable Metrics/CyclomaticComplexity
 def validate!
   if @new_resource.group &&
      (@new_resource.source_group_name ||
       @new_resource.source_group_id)
-    fail 'Cannot specify group and a source_group_* parameter at the same time'
+    raise 'Cannot specify group and a source_group_* parameter at the same time'
   end
   return true unless @new_resource.source_group_name &&
                      @new_resource.source_group_id
-  fail 'source_group_name and source_group_id cannot be specified at the ' \
+  raise 'source_group_name and source_group_id cannot be specified at the ' \
        'same time.'
 end
 # rubocop:enable Metrics/CyclomaticComplexity
@@ -106,12 +107,10 @@ def security_group_rule_exact_match?
   end
 end
 
-# rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
-# rubocop:disable Metrics/MethodLength
 def permission_exact_match?(existing_rule)
   return false unless current_resource_ip_permissions['groups'].eql?(
-                        existing_rule['groups']
-                      )
+    existing_rule['groups']
+  )
   return false unless current_resource_ip_permissions['ipProtocol'] ==
                       existing_rule['ipProtocol']
   return false unless
@@ -160,8 +159,8 @@ def ip_range_covered?(existing_ranges)
   current_resource_ip_permissions['ipRanges'].each do |new_range|
     existing_ranges.each do |existing_range|
       return true if IPAddr.new(existing_range['cidrIp']).include?(
-                       IPAddr.new(new_range['cidrIp'])
-                     )
+        IPAddr.new(new_range['cidrIp'])
+      )
     end
   end
   false
@@ -172,7 +171,6 @@ def port_range_overlap?(existing_from_port, existing_to_port)
     existing_to_port >= current_resource_ip_permissions['toPort']
 end
 
-# rubocop:disable Metrics/MethodLength
 def source_group
   return [] unless @current_resource.source_group_id ||
                    @current_resource.source_group_name

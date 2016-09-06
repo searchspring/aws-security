@@ -4,14 +4,14 @@ if defined?(ChefSpec)
   end
 
   def remove_aws_security_group(resource_name)
-  	ChefSpec::Matchers::ResourceMatcher.new(:aws_security_group, :remove, resource_name)
+    ChefSpec::Matchers::ResourceMatcher.new(:aws_security_group, :remove, resource_name)
   end
 
   def add_aws_security_group_rule(resource_name)
-  	ChefSpec::Matchers::ResourceMatcher.new(:aws_security_group_rule, :add, resource_name)
+    ChefSpec::Matchers::ResourceMatcher.new(:aws_security_group_rule, :add, resource_name)
   end
 
   def remove_aws_security_group_rule(resource_name)
-  	ChefSpec::Matchers::ResourceMatcher.new(:aws_security_group_rule, :remove, resource_name)
+    ChefSpec::Matchers::ResourceMatcher.new(:aws_security_group_rule, :remove, resource_name)
   end
 end

@@ -4,11 +4,13 @@ def whyrun_supported?
   true
 end
 
+use_inline_resources
+
 action :create_if_missing do
   if @current_resource.exists
-    Chef::Log.info "#{ @new_resource } already exists - nothing to do."
+    Chef::Log.info "#{@new_resource} already exists - nothing to do."
   else
-    converge_by("Creating #{ @new_resource } security group") do
+    converge_by("Creating #{@new_resource} security group") do
       create_security_group
     end
   end
@@ -16,9 +18,9 @@ end
 
 action :create_and_attach do
   if @current_resource.exists
-    Chef::Log.info "#{ @new_resource } already exists."
+    Chef::Log.info "#{@new_resource} already exists."
   else
-    converge_by("Creating #{ @new_resource } security group") do
+    converge_by("Creating #{@new_resource} security group") do
       create_security_group
     end
   end
@@ -27,13 +29,13 @@ end
 
 action :remove do
   if @current_resource.exists
-    fail "#{ @new_resource } cannot be removed - configuration " \
+    raise "#{@new_resource} cannot be removed - configuration " \
       'mismatch' unless security_group
-    converge_by("Remvoing #{ @new_resource } security group") do
+    converge_by("Remvoing #{@new_resource} security group") do
       security_group.destroy
     end
   else
-    Chef::Log.info "#{ @new_resource } does not exist - nothing to do."
+    Chef::Log.info "#{@new_resource} does not exist - nothing to do."
   end
 end
 
@@ -41,7 +43,7 @@ action :attach do
   if @current_resource.exists
     add_instance_to_security_group(instance)
   else
-    fail "#{ @new_resource } does not exist - unable to attach."
+    raise "#{@new_resource} does not exist - unable to attach."
   end
 end
 
@@ -49,7 +51,7 @@ action :detach do
   if @current_resource.exists
     remove_instance_from_security_group(instance)
   else
-    Chef::Log.info "#{ @new_resource } does not exist - nothing to do."
+    Chef::Log.info "#{@new_resource} does not exist - nothing to do."
   end
 end
 
@@ -75,8 +77,8 @@ end
 
 def security_group
   @sg ||= ec2.security_groups.all(
-            'group-name' => [@current_resource.groupname]
-          ).find { |g| g.vpc_id == @current_resource.vpcid }
+    'group-name' => [@current_resource.groupname]
+  ).find { |g| g.vpc_id == @current_resource.vpcid }
 end
 
 def create_security_group
@@ -87,7 +89,7 @@ def add_instance_to_security_group(instance)
   existing_groups = instance.network_interfaces.first['groupIds']
 
   unless existing_groups.include?(security_group.group_id)
-    ec2.modify_instance_attribute(instance.id, {'GroupId' => (existing_groups + [security_group.group_id])})
+    ec2.modify_instance_attribute(instance.id, 'GroupId' => (existing_groups + [security_group.group_id]))
   end
 end
 
@@ -95,7 +97,7 @@ def remove_instance_from_security_group(instance)
   existing_groups = instance.network_interfaces.first['groupIds']
 
   if existing_groups.include?(security_group.group_id)
-    ec2.modify_instance_attribute(instance.id, {'GroupId' => (existing_groups - [security_group.group_id])})
+    ec2.modify_instance_attribute(instance.id, 'GroupId' => (existing_groups - [security_group.group_id]))
   end
 end
 
