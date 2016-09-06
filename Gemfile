@@ -2,10 +2,9 @@ source 'https://rubygems.org'
 
 gem 'fog', '~> 1.24'
 
-
 group :lint do
-  gem 'foodcritic', '~> 5.0'
-  gem 'rubocop', '~> 0.34'
+  gem 'foodcritic', '~> 7.0'
+  gem 'cookstyle'
 end
 
 group :unit do
