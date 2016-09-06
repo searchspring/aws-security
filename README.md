@@ -14,23 +14,6 @@ This cookbook provides libraries, resource and providers to config and manage Am
 - chefspec
 - rspec_junit_formatter
 
-# AWS Credentials
-
-The default recipe will look for a encrypted data bag defined by node['aws_security']['encrypted_data_bag'] with the following keys
-
-- aws_access_key_id
-- aws_secret_access_key
-
-E.G.
-
-```json
-{
-    "id": "aws",
-    "aws_access_key_id": "YOUR_ACCESS_KEY",
-    "aws_secret_access_key": "YOUR_SECRET_ACCESS_KEY"
-}
-```
-
 # Recipes
 
 ## default
@@ -156,6 +139,23 @@ end
 
 - Egress rules
 - Apply security groups to instances, elbs, vpcs, etc
+
+# AWS Credentials for testing
+
+The default testing recipe will look for a encrypted data bag item aws_keys in the data bag defined by node['aws_security']['encrypted_data_bag'] with the following keys:
+
+- aws_access_key_id
+- aws_secret_access_key
+
+E.G.
+
+```json
+{
+    "id": "aws_keys",
+    "aws_access_key_id": "YOUR_ACCESS_KEY",
+    "aws_secret_access_key": "YOUR_SECRET_ACCESS_KEY"
+}
+```
 
 # License and Author
 
