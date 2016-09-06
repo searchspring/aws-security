@@ -98,13 +98,3 @@ aws_security_group_rule 'test rule 5' do
   aws_access_key_id credentials['aws_access_key_id']
   aws_secret_access_key credentials['aws_secret_access_key']
 end
-
-aws_security_group_rule 'test rule 5' do
-  group 'test_source_group'
-  source_group_name 'test_source_group'
-  groupname 'test'
-  region 'us-west-2'
-  ip_protocol 'tcp'
-  aws_access_key_id credentials['aws_access_key_id']
-  aws_secret_access_key credentials['aws_secret_access_key']
-end
