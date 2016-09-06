@@ -20,4 +20,4 @@
 # limitations under the License.
 #
 
-include_recipe 'fog_gem::chefgem'
+Chef::Log.warn('The default aws_security recipe does nothing. See the readme for information on using the aws_security resources')
