@@ -15,3 +15,8 @@ execute 'runmoto' do
   creates '/var/run/moto_server'
   action  :run
 end
+
+# packages to get nokogiri to install with serverspec
+package %w(zlib1g-dev liblzma-dev) if platform_family?('debian')
+
+package %w(gcc ruby-devel zlib-devel) if platform_family?('rhel')
